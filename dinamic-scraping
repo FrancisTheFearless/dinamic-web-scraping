@@ -1,0 +1,43 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+import time
+
+def extraer_textos_con_selenium(url):
+    # Configura el WebDriver (ajusta la ruta al ejecutable de ChromeDriver)
+    chrome_options = Options()
+    chrome_options.binary_location = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    driver = webdriver.Chrome(executable_path='chromedriver.exe', options=chrome_options)
+
+    # Abre la URL
+    driver.get(url)
+    print("URL cargada:", url)
+
+    # Espera para que se cargue el contenido dinámico (ajusta el tiempo según necesidad)
+    time.sleep(10)  # Aumentado a 10 segundos para prueba
+
+    # Imprime una parte del HTML para depuración
+    print("HTML de la página (fragmento):", driver.page_source[:500])
+
+    # Extrae los textos
+    textos = []
+    elementos = driver.find_elements(By.XPATH, '//h1 | //h2 | //h3 | //h4 | //h5 | //h6 | //p')
+    for elemento in elementos:
+        texto_elemento = elemento.text
+        if texto_elemento:  # Verifica que el texto no esté vacío
+            print("Elemento encontrado:", texto_elemento)  # Imprime el texto de cada elemento encontrado
+            textos.append(texto_elemento)
+
+    # Cierra el navegador
+    driver.quit()
+
+    return textos
+
+def main():
+    url = input("Ingresa la URL: ")
+    textos = extraer_textos_con_selenium(url)
+    for texto in textos:
+        print(texto)
+
+if __name__ == "__main__":
+    main()
