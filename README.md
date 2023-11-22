@@ -26,7 +26,7 @@
 <h2>Instalación de Dependencias</h2>
 <p>Instala las dependencias necesarias con el siguiente comando:</p>
 <pre><code>pip install selenium beautifulsoup4</code></pre>
-<p>Asegúrate de tener el WebDriver adecuado para tu versión de Chrome. Puedes descargarlo desde <a href="https://sites.google.com/a/chromium.org/chromedriver/downloads">aquí</a>.</p>
+<p>Asegúrate de tener el WebDriver adecuado para tu versión de Chrome. Dentro del repositorio está la versión compatible con Chrome Versión 119.0.6045.160 (Build oficial) (64 bits)
 
 <h2>Configuración</h2>
 <p>Antes de ejecutar el script, asegúrate de configurar la ubicación del binario de Chrome y el path del WebDriver en el script. Modifica las siguientes líneas según tu configuración:</p>
