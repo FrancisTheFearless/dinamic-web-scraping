@@ -42,3 +42,48 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+import time
+import pandas as pd
+
+def extraer_datos_con_selenium(url):
+    chrome_options = Options()
+    chrome_options.binary_location = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    driver = webdriver.Chrome(executable_path='chromedriver.exe', options=chrome_options)
+
+    driver.get(url)
+    time.sleep(10)
+
+    datos = []
+    elementos = driver.find_elements(By.XPATH, '//div[@data-exchange-rate]')
+    for elemento in elementos:
+        texto_elemento = elemento.get_attribute('data-exchange-rate')
+        if texto_elemento:
+            datos.append(texto_elemento)
+
+    driver.quit()
+    return datos
+
+def exportar_a_excel(datos, nombre_archivo):
+    df = pd.DataFrame(datos, columns=['Data Exchange Rate'])
+    with pd.ExcelWriter(nombre_archivo, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False)
+
+def main():
+    url = "https://www.google.com/search?q=valor+dolar+clp&oq=valor+dolar+clp&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhA0gEIMzAxMWowajGoAgCwAgA&sourceid=chrome&ie=UTF-8"  # Reemplaza con la URL deseada
+    datos = extraer_datos_con_selenium(url)
+    nombre_archivo = "datos_exchange_rate.xlsx"
+    exportar_a_excel(datos, nombre_archivo)
+    
+    # Imprimir los datos en la consola
+    print("Datos extraídos:")
+    for dato in datos:
+        print(dato)
+
+    print(f"Los datos han sido exportados a {nombre_archivo}")
+
+if __name__ == "__main__":
+    main()
