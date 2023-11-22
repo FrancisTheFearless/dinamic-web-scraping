@@ -1,0 +1,40 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+
+def cerrar_politicas_privacidad(driver):
+    try:
+        # Esperar hasta que el botón sea visible y esté listo para ser clickeado
+        boton_rechazar = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//span[contains(@class, 'VfPpkd-vQzf8d') and contains(text(), 'Reject all')]")) #clase del botón cerrar políticas de privacidad de google finance
+        )
+        boton_rechazar.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print("No se pudo cerrar el diálogo de políticas de privacidad:", e)
+
+
+def main():
+    chrome_options = Options()
+    chrome_options.binary_location = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    driver = webdriver.Chrome(executable_path='chromedriver.exe', options=chrome_options)
+
+    url = "https://www.google.com/finance/quote/USD-CLP?sa=X&ved=2ahUKEwjwhsG-1NOCAxX5T6QEHbFABtEQmY0JegQIDhAr&window=MAX"  # Reemplaza con la URL deseada
+    
+    driver.get(url)
+    time.sleep(5)  # Espera para que se cargue el contenido dinámico
+    cerrar_politicas_privacidad(driver)
+
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    divs = soup.find_all('div', class_='YMlKec fxKbKc') #Contenido de la clase que deseas extraer 
+    for div in divs:
+        print(div.text)
+
+    driver.quit()
+
+if __name__ == "__main__":
+    main()
